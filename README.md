@@ -1,7 +1,7 @@
 # Voice Recorder Python Script 🎙️
 
-Ye Python script aapko **microphone se audio record karne** ki ability deti hai aur WAV file me save karta hai.  
-User manually recording ko **Ctrl+C ya ENTER** se stop kar sakta hai.
+This Python script allows you to **record audio from your microphone** and save it as a WAV file.  
+The user can manually stop the recording using **Ctrl+C**.
 
 ---
 
