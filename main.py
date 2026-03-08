@@ -1,36 +1,35 @@
-# import libraries 
+# importing libraries
 
-import sounddevice as sd
-import wavio as wv
+import sounddevice as sd # for accessing mic
+import wavio as wv # to convert NumPy array into WAV
+import numpy as np # for managing array 
 
-# Show input/output devices
-print(sd.query_devices())
+freq = 44100      # sample rate
+channels = 1      # mono recording
+device = sd.default.device[0]  # default input device
 
-# Parameters
-freq = 44100
-record_duration = 5
-channels = 1
+print("Press Ctrl+C to stop recording at any time!")
 
-# Use default input device
-device = sd.default.device[0]
+# Buffer to store audio chunks
+recorded_frames = []
 
-# Record audio
-print("Recording...")
-recording = sd.rec(
-    int(record_duration * freq),
-    samplerate=freq,
-    channels=channels,
-    dtype='int16',
-    device=device
-)
-sd.wait()
-print("Recording finished.")
+try:
+    # open input stream
+    with sd.InputStream(samplerate=freq, channels=channels, dtype='int16', device=device) as stream:
+        while True:
+            data, _ = stream.read(freq)
+            recorded_frames.append(data)
+except KeyboardInterrupt:
+    print("\nRecording stopped by user!")
 
-# Save WAV
-wv.write('recording_wv.wav', recording, freq, sampwidth=2)
-print("File saved: recording_wv.wav")
+# Convert list of chunks to a single NumPy array
+recording = np.concatenate(recorded_frames, axis=0)
 
-# Optional: play back immediately
+# save using wavio
+wv.write('manual_recording.wav', recording, freq, sampwidth=2)
+print("File saved: manual_recording.wav")
+
+# play back immediately
 sd.play(recording, freq)
 sd.wait()
 print("Playback finished.")
