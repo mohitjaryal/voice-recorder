@@ -1,18 +1,36 @@
-# import libraries
+# import libraries 
+
 import sounddevice as sd
-from scipy.io.wavfile import write
 import wavio as wv
 
-# sampling frequency
+# Show input/output devices
+print(sd.query_devices())
 
+# Parameters
 freq = 44100
-
-# recording duration
 record_duration = 5
+channels = 1
 
-# start recoder 
-recording = sd.rec(int(record_duration * freq),
-                        samplerate=freq, channels=2)
+# Use default input device
+device = sd.default.device[0]
 
-# record audio for given. no of seconds
+# Record audio
+print("Recording...")
+recording = sd.rec(
+    int(record_duration * freq),
+    samplerate=freq,
+    channels=channels,
+    dtype='int16',
+    device=device
+)
+sd.wait()
+print("Recording finished.")
 
+# Save WAV
+wv.write('recording_wv.wav', recording, freq, sampwidth=2)
+print("File saved: recording_wv.wav")
+
+# Optional: play back immediately
+sd.play(recording, freq)
+sd.wait()
+print("Playback finished.")
