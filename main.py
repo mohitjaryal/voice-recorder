@@ -1,4 +1,4 @@
-# Voice recorder using 
+# Voice recorder using sounddevice,
 # importing libraries
 
 import sounddevice as sd # for accessing mic
